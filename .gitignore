@@ -1,0 +1,8 @@
+# Build artifacts (được đính kèm trong GitHub Release, không commit vào source)
+*.exe
+*.a3x
+*.pdb
+
+# Thư mục tạm
+/tmp/
+/build/
