@@ -2,6 +2,12 @@
 
 Tool AutoIt in tất cả file Word/Excel trong một thư mục cụ thể (thư mục nằm chung đường dẫn với tool), hỗ trợ chọn khoảng trang in và delay giữa mỗi lệnh gửi tới máy in.
 
+## Tải về
+
+Tải bản chạy sẵn (không cần cài AutoIt): **[BatchPrint.exe — Releases](https://github.com/piepadjob/autoit-printer-tool/releases/latest)**
+
+> Yêu cầu: Windows + đã cài Microsoft Word và/hoặc Microsoft Excel.
+
 ## Tính năng
 
 - **In tất cả file Word/Excel** trong thư mục được chọn
