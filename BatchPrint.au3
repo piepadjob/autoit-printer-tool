@@ -19,7 +19,6 @@
 #include <StaticConstants.au3>
 #include <ButtonConstants.au3>
 #include <ComboConstants.au3>
-#include <Array.au3>
 
 ; ======================== HẰNG SỐ ========================
 Global Const $gsWordExt = ".doc|.docx|.docm|.dot|.dotx|.rtf"
@@ -210,7 +209,7 @@ Func _DoPrintBatch()
 		MsgBox(64, _T("infoTitle"), _T("msgNoFiles") & @CRLF & $sDir)
 		Return
 	EndIf
-	_ArraySort($aTarget)
+	_SortNatural($aTarget)
 
 	; ---- Chuẩn bị chạy ----
 	$g_bPrinting = True
@@ -438,6 +437,96 @@ Func _ExtInList($sExt, $sList)
 		If $sExt = $a[$i] Then Return True
 	Next
 	Return False
+EndFunc
+
+; ======================== SẮP XẾP THỨ TỰ TỰ NHIÊN (NATURAL SORT) ========================
+; Tách chuỗi thành token số / không phải số: "file10a" -> ["file", "10", "a"]
+Func _NatSplit($s)
+	Local $aR = StringRegExp($s, "\d+|\D+", 3)
+	If @error Then
+		Local $aE[1] = [$s]
+		Return $aE
+	EndIf
+	Return $aR
+EndFunc
+
+; So sánh 2 chuỗi theo thứ tự tự nhiên (natural order):
+;   "file2.docx" < "file10.docx"  (2 < 10, KHÔNG phải 1,10,11,2)
+; Trả về: <0 nếu a < b, 0 nếu bằng, >0 nếu a > b
+Func _NatCompare($sA, $sB)
+	Local $aTokA = _NatSplit($sA)
+	Local $aTokB = _NatSplit($sB)
+	Local $iMax = UBound($aTokA)
+	If UBound($aTokB) > $iMax Then $iMax = UBound($aTokB)
+	Local $i = 0, $sTa = "", $sTb = "", $sNa = "", $sNb = "", $iCmp = 0
+	For $i = 0 To $iMax - 1
+		If $i >= UBound($aTokA) Then Return -1 ; A hết token -> A ngắn hơn -> xếp trước
+		If $i >= UBound($aTokB) Then Return 1
+		$sTa = $aTokA[$i]
+		$sTb = $aTokB[$i]
+		If StringRegExp($sTa, "^\d+$") And StringRegExp($sTb, "^\d+$") Then
+			; Cả 2 token là số: so sánh THEO SỐ (bỏ số 0 đầu để tránh tràn)
+			$sNa = StringRegExpReplace($sTa, "^0+", "")
+			$sNb = StringRegExpReplace($sTb, "^0+", "")
+			If $sNa = "" Then $sNa = "0"
+			If $sNb = "" Then $sNb = "0"
+			If StringLen($sNa) <> StringLen($sNb) Then ; số nhiều chữ số lớn hơn
+				If StringLen($sNa) < StringLen($sNb) Then Return -1
+				Return 1
+			EndIf
+			$iCmp = StringCompare($sNa, $sNb, 0) ; cùng số chữ số -> so chuỗi = so số
+			If $iCmp < 0 Then Return -1
+			If $iCmp > 0 Then Return 1
+		Else
+			; Token không phải số (hoặc 1 số 1 chữ cái): so sánh không phân biệt hoa/thường
+			$iCmp = StringCompare($sTa, $sTb, 0)
+			If $iCmp < 0 Then Return -1
+			If $iCmp > 0 Then Return 1
+		EndIf
+	Next
+	Return 0
+EndFunc
+
+; Sắp xếp mảng chuỗi theo thứ tự tự nhiên (merge sort: ổn định, O(n log n))
+Func _SortNatural(ByRef $aArr)
+	Local $n = UBound($aArr)
+	If $n < 2 Then Return
+	_MergeSortNat($aArr, 0, $n - 1)
+EndFunc
+
+Func _MergeSortNat(ByRef $aArr, $iLo, $iHi)
+	If $iLo >= $iHi Then Return
+	Local $iMid = Int(($iLo + $iHi) / 2)
+	_MergeSortNat($aArr, $iLo, $iMid)
+	_MergeSortNat($aArr, $iMid + 1, $iHi)
+
+	; Trộn 2 nửa đã sắp sẵn
+	Local $iN = $iHi - $iLo + 1
+	Local $aTmp[$iN]
+	Local $i = $iLo, $j = $iMid + 1, $k = 0
+	While $i <= $iMid And $j <= $iHi
+		If _NatCompare($aArr[$i], $aArr[$j]) <= 0 Then
+			$aTmp[$k] = $aArr[$i]
+			$i += 1
+		Else
+			$aTmp[$k] = $aArr[$j]
+			$j += 1
+		EndIf
+		$k += 1
+	WEnd
+	While $i <= $iMid
+		$aTmp[$k] = $aArr[$i]
+		$i += 1
+		$k += 1
+	WEnd
+	While $j <= $iHi
+		$aTmp[$k] = $aArr[$j]
+		$j += 1
+		$k += 1
+	WEnd
+	For $k = 0 To $iN - 1
+		$aArr[$iLo + $k] = $aTmp[$k]
+	Next
 EndFunc
 
 ; ======================== ĐA NGÔN NGỮ / i18n ========================

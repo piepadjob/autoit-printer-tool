@@ -20,6 +20,8 @@ Get the ready-to-run build (no AutoIt installation required): **[BatchPrint.exe 
   - `2-5` → pages 2 to 5
   - `1,3,5-8` → pages 1, 3, and 5 through 8
   - empty → all pages
+- **Natural print order** — files with numbers print in numeric order: `1, 2, 9, 10, 11` (not lexicographic `1, 10, 11, 2`)
+  - e.g. `file2.docx` prints before `file10.docx`
 - **Delay (ms) between each command sent to the printer** — default `1000 ms`
   - Word: one print command per file
   - Excel: one print command per page range (Excel has no `Pages` argument, so ranges are sent as multiple commands)
@@ -54,6 +56,7 @@ Get the ready-to-run build (no AutoIt installation required): **[BatchPrint.exe 
 
 ## Notes
 
+- Files are sorted with a **natural sort** (numeric-aware) before printing, so numbered files always print smallest → largest
 - Avoid closing the tool while printing, to prevent hidden Word/Excel processes from hanging (if it happens, end `WINWORD.EXE` / `EXCEL.EXE` in Task Manager)
 - The delay is applied **after each command sent to the printer**; increase it if the printer receives commands slowly or jams between files
 - For Excel with "print all sheets" enabled, the From/To of the print command counts across the **whole file** (like Word), not per sheet

@@ -20,6 +20,8 @@ Tải bản chạy sẵn (không cần cài AutoIt): **[BatchPrint.exe — Relea
   - `2-5` → trang 2 đến 5
   - `1,3,5-8` → các trang 1, 3, từ 5 đến 8
   - để trống → in toàn bộ
+- **Thứ tự in tự nhiên (natural sort)** — file có số in theo thứ tự số tăng dần: `1, 2, 9, 10, 11` (không phải kiểu chữ `1, 10, 11, 2`)
+  - VD: `file2.docx` in trước `file10.docx`
 - **Delay (ms) giữa mỗi lệnh gửi tới máy in** — mặc định `1000 ms`
   - Word: 1 lệnh in cho mỗi file
   - Excel: 1 lệnh in cho mỗi khoảng trang (Excel không có tham số `Pages` nên các khoảng được gửi thành nhiều lệnh)
@@ -54,6 +56,7 @@ Tải bản chạy sẵn (không cần cài AutoIt): **[BatchPrint.exe — Relea
 
 ## Lưu ý
 
+- File được sắp theo **thứ tự tự nhiên (natural sort, nhận diện số)** trước khi in nên file đánh số luôn in từ số nhỏ đến số lớn
 - Không nên tắt tool giữa lúc đang in để tránh tiến trình Word/Excel ngầm bị treo (nếu lỡ tắt, kết thúc tiến trình `WINWORD.EXE` / `EXCEL.EXE` trong Task Manager)
 - Delay tính **sau mỗi lệnh gửi tới máy in**; tăng delay nếu máy in nhận lệnh chậm hoặc bị lỗi kẹt giữa các file
 - Excel khi chọn "in toàn bộ sheet": From/To của lệnh in tính theo **toàn bộ file** (giống Word), không tính theo từng sheet riêng lẻ
