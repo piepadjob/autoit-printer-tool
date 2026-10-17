@@ -1,56 +1,59 @@
-# BatchPrint — In hàng loạt file Word/Excel bằng AutoIt
+# BatchPrint — Batch print Word/Excel files with AutoIt
 
-Tool AutoIt in tất cả file Word/Excel trong một thư mục cụ thể (thư mục nằm chung đường dẫn với tool), hỗ trợ chọn khoảng trang in và delay giữa mỗi lệnh gửi tới máy in.
+**English** | [Tiếng Việt](README.vi.md)
 
-## Tải về
+An AutoIt tool that prints all Word/Excel files in a specific folder (the folder in the same path as the tool), with page-range selection and a delay between each command sent to the printer.
 
-Tải bản chạy sẵn (không cần cài AutoIt): **[BatchPrint.exe — Releases](https://github.com/piepadjob/autoit-printer-tool/releases/latest)**
+## Download
 
-> Yêu cầu: Windows + đã cài Microsoft Word và/hoặc Microsoft Excel.
+Get the ready-to-run build (no AutoIt installation required): **[BatchPrint.exe — Releases](https://github.com/piepadjob/autoit-printer-tool/releases/latest)**
 
-## Tính năng
+> Requirements: Windows + Microsoft Word and/or Microsoft Excel installed.
 
-- **In tất cả file Word/Excel** trong thư mục được chọn
+## Features
+
+- **Print all Word/Excel files** in the selected folder (defaults to the folder containing the `.exe`)
   - Word: `.doc`, `.docx`, `.docm`, `.dot`, `.dotx`, `.rtf`
   - Excel: `.xls`, `.xlsx`, `.xlsm`, `.xlsb`, `.xlt`, `.xltx`
-- **Chọn khoảng trang in** — mặc định chỉ in **trang 1**
-  - `1` → trang 1
-  - `2-5` → trang 2 đến 5
-  - `1,3,5-8` → các trang 1, 3, từ 5 đến 8
-  - để trống → in toàn bộ
-- **Delay (ms) giữa mỗi lệnh gửi tới máy in** — mặc định `1000 ms`
-  - Word: 1 lệnh in cho mỗi file
-  - Excel: 1 lệnh in cho mỗi khoảng trang (Excel không có tham số `Pages` nên các khoảng được gửi thành nhiều lệnh)
-- Tùy chọn **in toàn bộ các sheet của Excel** (mặc định bật) để khoảng trang tính theo toàn bộ file
-- Nhật ký in (log), nút **Dừng**, bỏ qua file lock tạm `~$...`
-- File lỗi (hỏng, bị mật khẩu, đang bị người khác mở) chỉ báo lỗi riêng, **không dừng cả lô in**
-- Ứng dụng Word/Excel chạy ngầm (ẩn), tự động tắt sau khi in xong
+- **Page range selection** — defaults to **page 1 only**
+  - `1` → page 1
+  - `2-5` → pages 2 to 5
+  - `1,3,5-8` → pages 1, 3, and 5 through 8
+  - empty → all pages
+- **Delay (ms) between each command sent to the printer** — default `1000 ms`
+  - Word: one print command per file
+  - Excel: one print command per page range (Excel has no `Pages` argument, so ranges are sent as multiple commands)
+- **Bilingual UI (EN/VI)** — switch language from the dropdown at the top of the window
+- Option to **print all Excel sheets** (enabled by default) so page ranges count across the whole file
+- Print log, **Stop** button, skips temporary lock files `~$...`
+- A failing file (corrupted, password-protected, locked) is reported individually and **does not stop the whole batch**
+- Word/Excel run hidden and are closed automatically when done
 
-## Yêu cầu
+## Requirements
 
 - Windows
-- Đã cài **Microsoft Word** và/hoặc **Microsoft Excel**
-- [AutoIt 3.3.16+](https://www.autoitscript.com/site/) (kèm SciTE) nếu muốn biên dịch thành `.exe`
+- Microsoft Word and/or Microsoft Excel installed
+- [AutoIt 3.3.16+](https://www.autoitscript.com/site/) (with SciTE) if you want to compile the `.exe` yourself
 
-## Biên dịch thành file `.exe`
+## Build the `.exe`
 
-1. Cài AutoIt (kèm SciTE for AutoIt)
-2. Mở [`BatchPrint.au3`](BatchPrint.au3) bằng SciTE
-3. `Tools` → `Compile` (hoặc bấm **F7**)
-4. Được `BatchPrint.exe` ở cùng thư mục
+1. Install AutoIt (with SciTE for AutoIt)
+2. Open [`BatchPrint.au3`](BatchPrint.au3) in SciTE
+3. `Tools` → `Compile` (or press **F7**)
+4. You get `BatchPrint.exe` in the same folder
 
-> File `.au3` được lưu ở mã hóa **UTF-8 có BOM** để hiển thị đúng tiếng Việt trên SciTE/Windows.
+> The `.au3` file is saved as **UTF-8 with BOM** so Vietnamese text displays correctly in SciTE/Windows.
 
-## Cách dùng
+## Usage
 
-1. Đặt file cần in vào **thư mục cùng đường dẫn với tool** (mặc định tool tự trỏ vào thư mục chứa `.exe`), hoặc bấm **Duyệt...** để chọn thư mục khác
-2. Nhập **trang cần in** (mặc định `1`)
-3. Nhập **delay (ms)** giữa các lệnh in (mặc định `1000`)
-4. Chọn loại file cần in (Word/Excel) và tùy chọn in toàn bộ sheet Excel
-5. Bấm **Bắt đầu in** — theo dõi nhật ký; bấm **Dừng** để dừng sớm
+1. Put the files to print in the **same folder as the tool** (the tool defaults to the folder containing the `.exe`), or click **Browse...** to pick another folder
+2. Enter the **pages to print** (default `1`)
+3. Enter the **delay (ms)** between print commands (default `1000`)
+4. Choose the file types (Word/Excel) and the "print all Excel sheets" option
+5. Click **Start printing** — watch the log; click **Stop** to stop early
 
-## Lưu ý
+## Notes
 
-- Không nên tắt tool giữa lúc đang in để tránh tiến trình Word/Excel ngầm bị treo (nếu lỡ tắt, kết thúc tiến trình `WINWORD.EXE` / `EXCEL.EXE` trong Task Manager)
-- Delay tính **sau mỗi lệnh gửi tới máy in**; tăng delay nếu máy in nhận lệnh chậm hoặc bị lỗi kẹt giữa các file
-- Excel khi chọn "in toàn bộ sheet": From/To của lệnh in tính theo **toàn bộ file** (giống Word), không tính theo từng sheet riêng lẻ
+- Avoid closing the tool while printing, to prevent hidden Word/Excel processes from hanging (if it happens, end `WINWORD.EXE` / `EXCEL.EXE` in Task Manager)
+- The delay is applied **after each command sent to the printer**; increase it if the printer receives commands slowly or jams between files
+- For Excel with "print all sheets" enabled, the From/To of the print command counts across the **whole file** (like Word), not per sheet

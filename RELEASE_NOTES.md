@@ -1,21 +1,63 @@
-## BatchPrint v1.0.0
+## BatchPrint v1.1.0
 
-Tool AutoIt in hàng loạt file Word/Excel trong một thư mục, hỗ trợ chọn khoảng trang in và delay giữa mỗi lệnh gửi tới máy in.
+Bilingual (EN/VI) release. An AutoIt tool that batch prints Word/Excel files in a folder, with page-range selection and a delay between each command sent to the printer.
+
+### What's new in v1.1.0
+
+- **Bilingual UI (EN/VI)** — switch language from the dropdown at the top of the window; all labels, buttons, log messages and dialogs are translated
+- **English README** — [`README.md`](../blob/main/README.md) is now English, Vietnamese moved to [`README.vi.md`](../blob/main/README.vi.md), with a language switcher at the top of both
+
+### Features
+
+- **Print all Word/Excel files** in the selected folder (defaults to the folder containing the `.exe`)
+  - Word: `.doc`, `.docx`, `.docm`, `.dot`, `.dotx`, `.rtf`
+  - Excel: `.xls`, `.xlsx`, `.xlsm`, `.xlsb`, `.xlt`, `.xltx`
+- **Page range selection** — defaults to **page 1 only**
+  - `1` → page 1
+  - `2-5` → pages 2 to 5
+  - `1,3,5-8` → pages 1, 3, and 5 through 8
+  - empty → all pages
+- **Delay (ms) between each command sent to the printer** — default `1000 ms`
+- Option to **print all Excel sheets**
+- Print log, **Stop** button, skips temporary lock files `~$...`
+- A failing file is reported individually and **does not stop the whole batch**
+
+### Requirements
+
+- Windows
+- Microsoft Word and/or Microsoft Excel installed
+
+### Usage
+
+1. Download `BatchPrint.exe` below
+2. Put the files to print in the **same folder as `BatchPrint.exe`** (or click **Browse...** to pick another folder)
+3. Enter the **pages to print** (default `1`) and the **delay (ms)** (default `1000`)
+4. Click **Start printing**
+
+### Notes
+
+- The `.exe` is built from [`BatchPrint.au3`](../blob/main/BatchPrint.au3) with Aut2exe (x86, Unicode, max compression) — runs on both 32-bit and 64-bit Windows
+- Some browsers/Windows SmartScreen may warn about an unsigned `.exe` — choose "More info" → "Run anyway" if you trust the source
+
+---
+
+## BatchPrint v1.1.0 (Tiếng Việt)
+
+Bản phát hành song ngữ (EN/VI). Tool AutoIt in hàng loạt file Word/Excel trong một thư mục, hỗ trợ chọn khoảng trang in và delay giữa mỗi lệnh gửi tới máy in.
+
+### Có gì mới trong v1.1.0
+
+- **Giao diện song ngữ Anh/Việt (EN/VI)** — đổi ngôn ngữ ở dropdown phía trên cửa sổ; toàn bộ nhãn, nút, nhật ký và hộp thoại được dịch
+- **README tiếng Anh** — [`README.md`](../blob/main/README.md) nay là tiếng Anh, bản tiếng Việt chuyển sang [`README.vi.md`](../blob/main/README.vi.md), có link chuyển ngôn ngữ ở đầu mỗi file
 
 ### Tính năng
 
 - **In tất cả file Word/Excel** trong thư mục được chọn (mặc định là thư mục chứa file `.exe`)
-  - Word: `.doc`, `.docx`, `.docm`, `.dot`, `.dotx`, `.rtf`
-  - Excel: `.xls`, `.xlsx`, `.xlsm`, `.xlsb`, `.xlt`, `.xltx`
-- **Chọn khoảng trang in** — mặc định chỉ in **trang 1**
-  - `1` → trang 1
-  - `2-5` → trang 2 đến 5
-  - `1,3,5-8` → các trang 1, 3, từ 5 đến 8
-  - để trống → in toàn bộ
+- **Chọn khoảng trang in** — mặc định chỉ in **trang 1** (`1`, `2-5`, `1,3,5-8`, để trống = in toàn bộ)
 - **Delay (ms) giữa mỗi lệnh gửi tới máy in** — mặc định `1000 ms`
 - Tùy chọn **in toàn bộ các sheet của Excel**
 - Nhật ký in, nút **Dừng**, bỏ qua file lock tạm `~$...`
-- File lỗi (hỏng, mật khẩu, đang bị mở) chỉ báo lỗi riêng, **không dừng cả lô in**
+- File lỗi chỉ báo riêng, **không dừng cả lô in**
 
 ### Yêu cầu
 
@@ -28,8 +70,3 @@ Tool AutoIt in hàng loạt file Word/Excel trong một thư mục, hỗ trợ c
 2. Đặt file cần in vào **cùng thư mục với `BatchPrint.exe`** (hoặc bấm **Duyệt...** để chọn thư mục khác)
 3. Nhập **trang cần in** (mặc định `1`) và **delay (ms)** (mặc định `1000`)
 4. Bấm **Bắt đầu in**
-
-### Lưu ý
-
-- File `.exe` được build từ [`BatchPrint.au3`](../blob/main/BatchPrint.au3) bằng Aut2exe (x86, Unicode, nén max) — chạy được trên cả Windows 32-bit và 64-bit
-- Một số trình duyệt/Windows SmartScreen có thể cảnh báo file `.exe` không có chữ ký số — chọn "More info" → "Run anyway" nếu bạn tin tưởng nguồn
