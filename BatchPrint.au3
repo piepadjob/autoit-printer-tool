@@ -314,43 +314,55 @@ Func _PrintExcelFile($sFile, $sPages)
 
 	Local $sRet = ""
 	Local $aParts = 0, $j = 0, $iFrom = 1, $iTo = 1, $aRT = 0
-	; Chọn toàn bộ sheet để khoảng trang tính theo TOÀN BỘ file (giống Word)
-	If $g_bAllSheets And $oWb.Sheets.Count > 1 Then
-		$oWb.Sheets.Select()
-		If $g_bComError Then $sRet = _T("errSelectSheets")
-	EndIf
+	Local $iSheet = 0, $oSheet = 0, $iSheetCount = $oWb.Worksheets.Count
 
-	If $sPages = "" Then
-		$oWb.PrintOut() ; in toàn bộ
-		If $g_bComError And $sRet = "" Then $sRet = _T("errPrintExcel")
-		Sleep($g_iDelay)
-	Else
-		; Excel không có tham số "Pages" -> tách từng khoảng rồi gửi nhiều lệnh in
-		$aParts = StringSplit($sPages, ",", 2)
-		For $j = 0 To UBound($aParts) - 1
-			If $g_bStop Then ExitLoop
-			$iFrom = 1
-			$iTo = 1
-			If StringInStr($aParts[$j], "-") Then
-				$aRT = StringSplit($aParts[$j], "-", 2)
-				If UBound($aRT) >= 2 Then
-					$iFrom = Int($aRT[0])
-					$iTo = Int($aRT[1])
-				EndIf
-			Else
-				$iFrom = Int($aParts[$j])
-				$iTo = $iFrom
-			EndIf
-			If $iFrom < 1 Then $iFrom = 1
-			If $iTo < $iFrom Then $iTo = $iFrom
-
+	; Không dùng Workbook.PrintOut sau Select(): một số phiên bản Excel chỉ in
+	; sheet đang active. In trực tiếp từng worksheet để bảo đảm không bỏ sót sheet.
+	For $iSheet = 1 To $iSheetCount
+		If $g_bStop Then ExitLoop
+		$oSheet = $oWb.Worksheets.Item($iSheet)
+		If $g_bComError Or Not IsObj($oSheet) Then
+			If $sRet = "" Then $sRet = _T("errPrintExcel")
 			$g_bComError = False
-			$oWb.PrintOut($iFrom, $iTo, 1) ; From, To, Copies
-			If $g_bComError And $sRet = "" Then $sRet = _Tf("errPrintExcelPart", "{p}", $aParts[$j])
-			Sleep($g_iDelay) ; delay sau moi lenh gui toi may in
-			_PumpEvents()
-		Next
-	EndIf
+			ContinueLoop
+		EndIf
+
+		; Sheet 0 = hidden, 1 = visible, 2 = very hidden. Sheet ẩn không thể in.
+		If $oSheet.Visible <> -1 Then ContinueLoop
+
+		If $sPages = "" Then
+			$g_bComError = False
+			$oSheet.PrintOut()
+			If $g_bComError And $sRet = "" Then $sRet = _T("errPrintExcel")
+			Sleep($g_iDelay)
+		Else
+			; Excel không có tham số "Pages" -> tách từng khoảng rồi in trên từng sheet.
+			$aParts = StringSplit($sPages, ",", 2)
+			For $j = 0 To UBound($aParts) - 1
+				If $g_bStop Then ExitLoop
+				$iFrom = 1
+				$iTo = 1
+				If StringInStr($aParts[$j], "-") Then
+					$aRT = StringSplit($aParts[$j], "-", 2)
+					If UBound($aRT) >= 2 Then
+						$iFrom = Int($aRT[0])
+						$iTo = Int($aRT[1])
+					EndIf
+				Else
+					$iFrom = Int($aParts[$j])
+					$iTo = $iFrom
+				EndIf
+				If $iFrom < 1 Then $iFrom = 1
+				If $iTo < $iFrom Then $iTo = $iFrom
+
+				$g_bComError = False
+				$oSheet.PrintOut($iFrom, $iTo, 1) ; From, To, Copies
+				If $g_bComError And $sRet = "" Then $sRet = _Tf("errPrintExcelPart", "{p}", $aParts[$j])
+				Sleep($g_iDelay)
+				_PumpEvents()
+			Next
+		EndIf
+	Next
 
 	$oWb.Close(False)
 	Return $sRet
